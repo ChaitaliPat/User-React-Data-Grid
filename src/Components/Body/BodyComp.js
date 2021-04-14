@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import './BodyStyle.css'
-import DataGrid from "react-data-grid";
+import DataGrid from "react-data-grid"
 
 const BodyComp =()=>{
 
     const[userData, setUserData]=useState('')
+    const[q,setQ]=useState("")
 
     const columns = [
         { key: "id", name: "ID" },
@@ -37,17 +38,32 @@ const BodyComp =()=>{
         )
     }
 
+    function search(rows){
+        if(q)
+        {return rows.filter((row)=> 
+            row.name.toLowerCase().indexOf(q) > -1 ||
+            row.username.toLowerCase().indexOf(q) > -1 ||
+            row.email.toLowerCase().indexOf(q) > -1 ||
+            row.phone.toLowerCase().indexOf(q) > -1 ||
+            row.website.toLowerCase().indexOf(q) > -1
+            
+        )}
+        else
+        {return userData}
+    }
+        
+
     console.log("API CALLED **********",userData)
     return(
     <div className='bodyDiv'>
     <div className='searchDiv'>
-        <h2>Search Functionality</h2>
+        <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}/>
+        <button>DownLoad CSV</button>
     </div>
     <div className='dataDiv'>
-      <DataGrid className='grid'
+      <DataGrid style={{height:'100%'}}
       columns={columns}
-      rows={rows}
-     
+      rows={search(rows)}
       />
     </div>
     </div>
