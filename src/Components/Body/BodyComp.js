@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import './BodyStyle.css'
 import DataGrid from "react-data-grid"
+import { CSVLink } from "react-csv"
 
 const BodyComp =()=>{
 
@@ -16,12 +17,33 @@ const BodyComp =()=>{
         { key: "website", name: "Website" },
       ];
 
+      const headers = [
+          {label: 'ID' , key: 'id'},
+          {label: 'Name' , key: 'name'},
+          {label: 'Username' , key: 'username'},
+          {label: 'Email' , key: 'email'},
+          {label: 'Phone' , key: 'phone'},
+          {label: 'Website' , key: 'website'},
+      ]
 
     //   const rows = _.map(userData, obj => {
     //       return _.omit(obj, ['address','company'])
     //   })
 
-      const rows = userData
+      const rows = userData;
+
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const d = new Date();
+        const dformat = `${d.getDate()}_${monthNames[d.getMonth()]}_${d.getFullYear()}_${d.getHours()}H_${d.getMinutes()}M`;
+        const filename = ("Report_"+dformat+".csv")
+        // console.log("getCurrentDate : ", d, dformat)
+
+      const csvReport = {
+          filename: filename,
+          headers: headers,
+          data: search(rows)
+      }
 
     useEffect(()=>{
         console.log("USE EFFECT RAN*********")
@@ -51,14 +73,14 @@ const BodyComp =()=>{
         else
         {return userData}
     }
-        
 
-    console.log("API CALLED **********",userData)
+    // console.log("API CALLED **********",userData)
+    
     return(
     <div className='bodyDiv'>
     <div className='searchDiv'>
         <input type="text" value={q} onChange={(e)=>setQ(e.target.value)}/>
-        <button>DownLoad CSV</button>
+        <CSVLink {...csvReport}>Export CSV</CSVLink>
     </div>
     <div className='dataDiv'>
       <DataGrid style={{height:'100%'}}
